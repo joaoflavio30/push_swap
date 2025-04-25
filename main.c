@@ -30,7 +30,7 @@ void	valid_input(char **argv)
 		{
 			if ((argv[i][j] == '-' || argv[i][j] == '+') && (flag < 2))
 			{
-				if (j > 0 && (argv[i][j-1] == '-' || argv[i][j-1] == '+'))
+				if (flag == 1 || (flag == 0 && j != 0))
 					exit(1);
 				flag++;
 				continue ;
