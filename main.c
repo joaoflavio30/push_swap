@@ -10,49 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stdio.h>
+#include "push_swap.h"
 
-void	valid_input(char **argv)
+static void	init_stack(t_stack **stack_a, char **argv)
 {
-	int	i;
-	int	j;
-	int	flag;
+	int		i;
+	long	num;
+	t_stack	*new;
 
-	flag = 0;
-	i = 0;
-
-	while (argv[++i])
+	i = 1;
+	while (argv[i])
 	{
-		j = -1;
-		flag = 0;
-		while (argv[i][++j])
-		{
-			if ((argv[i][j] == '-' || argv[i][j] == '+') && (flag < 2))
-			{
-				if (flag == 1 || (flag == 0 && j != 0))
-					exit(1);
-				flag++;
-				continue ;
-			}
-			if ((argv[i][j] != 32 && argv[i][j] != '\t') && (argv[i][j] < '0'
-			|| argv[i][j] > '9'))
-				exit(1);
-			if (argv[i][j] == 32)
-				flag = 0;
-		}
+		num = ft_atoi(argv[i]);
+		if (num > INT_MAX || num < INT_MIN)
+			error_exit(stack_a, NULL);
+		new = ft_stacknew((int)num);
+		if (!new)
+			error_exit(stack_a, NULL);
+		ft_stackadd_back(stack_a, new);
+		i++;
 	}
-
 }
 
 int	main(int argc, char **argv)
 {
-	// int	*stack1;
-	// int	*stack2;
+	t_stack	*stack_a;
+	t_stack	*stack_b;
 
+	stack_a = NULL;
+	stack_b = NULL;
 	if (argc == 1)
+		return (0);
+	if (!valid_input(argv))
+	{
+		write(2, "Error\n", 6);
 		return (1);
-
-	valid_input(argv);
-	printf("validação correta\n");
+	}
+	init_stack(&stack_a, argv);
+	if (check_duplicates(stack_a))
+	{
+		write(2, "Error\n", 6);
+		ft_stackclear(&stack_a);
+		return (1);
+	}
+	sort_stack(&stack_a, &stack_b);
+	ft_stackclear(&stack_a);
+	ft_stackclear(&stack_b);
+	return (0);
 }
